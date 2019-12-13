@@ -1,4 +1,5 @@
 #region -------------------------------------------------     Imports     ----------------------------------------------
+# All Imports
 from sense_hat import SenseHat
 import time
 import random
@@ -15,7 +16,7 @@ import threading
 #endregion
 
 #region-------------------------------------------    Global var    ----------------------------------------------------
-
+# This region got all the global var to the project
 #On Off------
 playerAmountOn = 1
 TurnSwithOn = 0
@@ -53,7 +54,9 @@ WhoWon = 0
 #endregion
 
 #region-------------------------------------------------    GUI    ------------------------------------------------------
+# The Region got all GUI senshat methods, meant to display on the SenceHat
 #-- - - Colors - - -
+# This is the color for the premade Pi methods
 green = (0, 255, 0)
 yellow = (255, 255, 0)
 blue = (0, 0, 255)
@@ -63,6 +66,7 @@ nothing = (0, 0, 0)
 pink = (255, 105, 180)
 
 # - - - - - - - - - - Dices - - - - - - - - - -
+# All these methods takes displays on the SenceHat
 # - - - - - Dice A - - - - -
 def PixelA1():
     #On
@@ -331,6 +335,7 @@ def PixelD6():
     s.set_pixel(6, 6, nothing)
 
 # - - - - - - - - - - - HP - - - - - - - - - - -
+# These displays HP on the sensehat
 def HP1():
     # On
     s.set_pixel(0, 3, red)
@@ -392,6 +397,7 @@ def HP6():
     #Off
 
 # - - - - - - - - - - Numbers - - - - - - - - - -
+# Displays on the sensehat, with all pixels
 def number_1():
     W = white
     O = nothing
@@ -578,6 +584,7 @@ def userMenu():
 #endregion
 
 #region---------------------------------------------    Intro Gui    ------------------------------------------------------
+# This region runs only 1 time in the game, and is the part that says Mejer on the display.
 #Set Letters
 images = [letter_M, letter_E, letter_Y, letter_E, letter_R]
 introCount = 0
@@ -591,7 +598,7 @@ while introCount < 5:
 #endregion
 
 #region --------------------------------------    Between players    ---------------------------------------------------
-
+#This part is between rounds, when you have to guess if people are cheating
 def TurnSwith():
     s = SenseHat()
     # - - GlobalHP - -
@@ -619,7 +626,7 @@ def TurnSwith():
     s.clear()
     s.set_pixels(userMenu[introCount % len(userMenu)]())
 
-    # SenceHat Activate                 <-- Test
+    # SenceHat Activate
     s = SenseHat()
     sense = SenseHat()
 
@@ -749,7 +756,7 @@ def TurnSwith():
 #endregion
 
 #region--------------------------------------------- Turn Secure --------------------------------------------------------
-
+#Because of with player it is, if connected with the turn. The program uses this methods, to fix the turn if players are dead.
 def NextTurn():
     # - - GlobalHP - -
     global player1HP
@@ -931,7 +938,7 @@ def NextTurn():
 #endregion
 
 #region---------------------------------------    Player Round    ------------------------------------------------------
-
+# Player round, then a player have to shuffle the dices and choose if he lies or not.
 def PlayerRound():
     global PlayerRoundOn
     global TurnSwithOn
@@ -948,11 +955,11 @@ def PlayerRound():
     # ShakeTime
     ShakeTimes = 1
 
-    #Test
+    #Clear for sense controller reasons
     s = SenseHat()
     sense = SenseHat()
     s.clear()
-    #TestEnd
+    # loop for round
     while PlayerRoundOn == 1:
         x, y, z = sense.get_accelerometer_raw().values()
         x = abs(x)
@@ -966,7 +973,7 @@ def PlayerRound():
         global Dice1
         global Dice2
 
-        # - - - - - HP Show - - - - -                            -----------------------FIX----------
+        # - - - - - HP Show - - - - -
         if turn == 1:
             if player1HP == 6:
                 HP6()
@@ -1052,7 +1059,7 @@ def PlayerRound():
                 HP1()
             # -----------------------------------------------------------------------
 
-
+        #Sets dices after pi is shuffeld
         if x > 5.4 or y > 5.4 or z > 5.4:
             if ShakeTimes==1:
                 #ShakeTimes off
@@ -1089,6 +1096,7 @@ def PlayerRound():
 
         for event in sense.stick.get_events():
 
+        #If pressed, player can choose with dice and dice number.
             if event.action == "pressed":
 
                 # + - dice number.
@@ -1157,6 +1165,7 @@ def PlayerRound():
 #endregion
 
 #region----------------------------    Player amount / Create Players    -----------------------------------------------
+#This region creates players for the game, using the global var
 
 def PlayerAmount():
     global playerAmountOn
@@ -1246,7 +1255,7 @@ def PlayerAmount():
 #endregion
 
 #region------------------------------------    UDP       -------------------------------------------------
-
+#This region is broadcasting the game info
 def UDP():
     #dataToSendt
     global playerAmountOn
@@ -1307,6 +1316,7 @@ def UDP():
 #endregion--------------------------------------------------------------------------------------------------------------
 
 #region------------------------------------    WhoWon       -------------------------------------------------
+#Method used to check if a player have won
 def WhoWonDef():
     global player1HP
     global player2HP
@@ -1337,10 +1347,8 @@ def WhoWonDef():
 #endregion
 
 #region------------------------------------    The Game Def Router       -------------------------------------------------
-
+#Becourse methods are used cross each other, does the game first start here so all methods are enabled.
 def TheGame():
-    #x = threading.Thread(target=UDP())
-    #x.start()
     gameloob = 1
     while gameloob==1:
         global playerAmountOn
